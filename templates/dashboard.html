@@ -1,0 +1,74 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'style/bootstrap.css' %}">
+    <script src="{% static 'script/jquery.js' %}"></script>
+    <script src="{% static 'script/bootstrap.js' %}"></script>
+    <script src="{% static 'script/popper.js' %}"></script>
+
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center mt-5 bg-light">
+            <div class="d-flex p-2 bg-dark text-light justify-content-center">
+                Please Enter location Name
+            </div>
+            <form>
+                <div class="form-row mt-4 justify-content-center">
+                    <div class="form-group col-md-8">
+                        <label for="loc_name">Location Name</label>
+                        <input type="text" class="form-control" id="loc_name" placeholder="Location...">
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <button id="myBut" type="button" class="btn btn-info">Click Me!</button>
+                </div>
+            </form>
+            <div id="result" class="card">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+     $(document).ready(function(){
+        $('#myBut').click(function(){
+            var loc_name = $('#loc_name').val()
+            var json = {loc_name}
+            $.ajax({
+                url:'send-api-2/',
+                type:'post',
+                data: json,
+                headers:{'X-CSRFToken': csrftoken},
+                success:function(data){
+                    $('#result').html(data)
+                },
+                error:function(er){
+                    $('#result').html('something wrong, try again later')
+                }
+            })
+        })
+    })
+</script>
+</body>
+</html>
